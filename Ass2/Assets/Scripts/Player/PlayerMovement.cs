@@ -15,7 +15,6 @@ public class PlayerMovement : MonoBehaviour {
         floorMask = LayerMask.GetMask("Floor");
         anim = GetComponent<Animator>();
         playerRigidbody = GetComponent<Rigidbody>();
-
     }
 
     void FixedUpdate()
@@ -40,7 +39,6 @@ public class PlayerMovement : MonoBehaviour {
         movement = movement.normalized * speed * Time.deltaTime* 0.2f;
 
         playerRigidbody.MovePosition(transform.position + movement);
-
     }
 
     void Turning()
@@ -74,4 +72,30 @@ public class PlayerMovement : MonoBehaviour {
         anim.SetBool("IsWalking", walking);
         anim.speed = 3;
     }
+
+    void OnTriggerEnter(Collider obj)
+    {
+        if (obj.gameObject.tag == "Key")
+        {
+            GameVariables.keys.Add(obj.gameObject.name.Substring(3));
+            Destroy(obj.gameObject);
+
+            UnityEngine.UI.RawImage k = GameObject.Find(obj.gameObject.name + "HUD").GetComponent<UnityEngine.UI.RawImage>();
+            if (k != null)
+            {
+                k.enabled = true;
+            }
+
+        }
+        else if (obj.gameObject.tag == "Door")
+        {
+            if(GameVariables.keys.Contains(obj.gameObject.name.Substring(4)))
+            {
+                obj.gameObject.GetComponent<Transform>().position = new Vector3(1.3135f, 0.829f, 4.3695f);
+                obj.gameObject.GetComponent<Transform>().rotation = Quaternion.Euler(-90,0,90);
+            }
+        }
+
+    }
+
 }
