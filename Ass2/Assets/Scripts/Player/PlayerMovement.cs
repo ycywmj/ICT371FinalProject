@@ -89,10 +89,9 @@ public class PlayerMovement : MonoBehaviour {
         }
         else if (obj.gameObject.tag == "Door")
         {
-            if(GameVariables.keys.Contains(obj.gameObject.name.Substring(4)))
+            if (obj.gameObject.name == "Door1")
             {
-                obj.gameObject.GetComponent<Transform>().position = new Vector3(1.3135f, 0.829f, 4.3695f);
-                obj.gameObject.GetComponent<Transform>().rotation = Quaternion.Euler(-90,0,90);
+                GameObject.Find("p1Canvas").GetComponent<CanvasGroup>().alpha = 1;
             }
         }
 
