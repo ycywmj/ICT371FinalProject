@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
-    public float speed = 0.01f;
+    public float speed = 5f;
     Vector3 movement;
     Animator anim;
     Rigidbody playerRigidbody;
@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour {
     {
         movement.Set(h, 0f, v);
 
-        movement = movement.normalized * speed * Time.deltaTime* 0.1f;
+        movement = movement.normalized * speed * Time.deltaTime* 0.2f;
 
         playerRigidbody.MovePosition(transform.position + movement);
 
@@ -72,6 +72,6 @@ public class PlayerMovement : MonoBehaviour {
 
         // Tell the animator whether or not the player is walking.
         anim.SetBool("IsWalking", walking);
-        anim.speed = 2;
+        anim.speed = 3;
     }
 }
