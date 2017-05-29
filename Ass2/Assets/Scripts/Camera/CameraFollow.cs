@@ -5,22 +5,24 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour {
 
 	public Transform target;
-	public float smoothing = 5f;
 
-	Vector3 offset;
+    Vector3 offset;
 
 	void Start()
 	{
 		offset = transform.position - target.position;
 	}
 
-    void FixedUpdate()
+    void LateUpdate()
     {
-        // Create a postion the camera is aiming for based on the offset from the target.
-        Vector3 targetCamPos = target.position + offset;
-
-        // Smoothly interpolate between the camera's current position and it's target position.
-        transform.position = Vector3.Lerp(transform.position, targetCamPos, smoothing * Time.deltaTime);
+        // calculate the desired movement position and rotation angle
+        Vector3 desired_pos = target.transform.position + offset;
+        float desired_angle = target.transform.eulerAngles.y;
+        // calculate the actual movement and rotation
+        Quaternion rot = Quaternion.Euler(70, desired_angle, 0);
+        // set the camera
+        transform.position = target.transform.position - (rot * offset);
+        transform.LookAt(target.transform);
     }
 
 }
