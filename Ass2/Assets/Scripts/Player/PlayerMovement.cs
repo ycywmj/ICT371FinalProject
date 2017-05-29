@@ -44,6 +44,10 @@ public class PlayerMovement : MonoBehaviour {
             // Turn the player to face the mouse cursor.
             Turning ();
         }
+        else
+        {
+            Animating(0, 0);
+        }
     }
 
     void APick(bool Picking)
