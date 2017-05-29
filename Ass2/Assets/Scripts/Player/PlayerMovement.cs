@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour {
     Rigidbody playerRigidbody;
     int floorMask;
     float camRayLength = 100f;
+    bool Picking = false;
 
     void Awake()
     {
@@ -22,14 +23,30 @@ public class PlayerMovement : MonoBehaviour {
         float h = -Input.GetAxisRaw("Horizontal");
         float v = -Input.GetAxisRaw("Vertical");
 
-             // Move the player around the scene.
+        // Animate the player.
+        Animating(h, v);
+
+        if (Input.GetKey("f"))
+        {
+            Picking = true;
+
+        }
+        APick(Picking);
+        Picking = false;
+
+
+        // Move the player around the scene.
         Move (h, v);
 
         // Turn the player to face the mouse cursor.
         Turning ();
 
-        // Animate the player.
-        Animating (h, v);
+
+    }
+
+    void APick(bool Picking)
+    {
+        anim.SetBool("Pick", Picking);
     }
 
     void Move(float h, float v)
