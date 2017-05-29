@@ -19,17 +19,24 @@ public class PlayerMovement : MonoBehaviour {
 
     void FixedUpdate()
     {
-        float h = -Input.GetAxisRaw("Horizontal");
-        float v = -Input.GetAxisRaw("Vertical");
+        if (GameVariables.playerMoveable)
+        {
+            float h = -Input.GetAxisRaw("Horizontal");
+            float v = -Input.GetAxisRaw("Vertical");
 
-             // Move the player around the scene.
-        Move (h, v);
+                 // Move the player around the scene.
+            Move (h, v);
 
-        // Turn the player to face the mouse cursor.
-        Turning ();
+            // Turn the player to face the mouse cursor.
+            Turning ();
 
-        // Animate the player.
-        Animating (h, v);
+            // Animate the player.
+            Animating (h, v);
+        }
+        else
+        {
+            Animating (0, 0);
+        }
     }
 
     void Move(float h, float v)
@@ -89,12 +96,28 @@ public class PlayerMovement : MonoBehaviour {
         }
         else if (obj.gameObject.tag == "Door")
         {
-            if (obj.gameObject.name == "Door1")
+            if (obj.gameObject.name == "Door1" && !GameVariables.p1complete)
             {
-                GameObject.Find("p1Canvas").GetComponent<CanvasGroup>().alpha = 1;
+                enableCanvas("p1Canvas");
+            	GameVariables.playerMoveable = false;
             }
         }
+        else if (obj.gameObject.name == "laptop01")
+        {
+            enableCanvas("p1Canvas2");
+            GameVariables.playerMoveable = false;
+        }
 
+    }
+
+    void enableCanvas(string cName)
+    {
+        UnityEngine.CanvasGroup cg = GameObject.Find(cName).GetComponent<CanvasGroup>();
+        if (cg != null)
+        {
+            cg.alpha = 1;
+            cg.blocksRaycasts = true;
+        }
     }
 
 }
