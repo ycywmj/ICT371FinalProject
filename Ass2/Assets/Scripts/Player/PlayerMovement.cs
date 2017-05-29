@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
     public float mov_spd = 1f;
-    public float rot_spd = 1f;
+    public float rot_spd = 10f;
     Animator anim;
     Rigidbody playerRigidbody;
     int floorMask;
@@ -74,7 +74,6 @@ public class PlayerMovement : MonoBehaviour {
             {
                 k.enabled = true;
             }
-
         }
         else if (obj.gameObject.tag == "Door")
         {
@@ -83,13 +82,45 @@ public class PlayerMovement : MonoBehaviour {
                 enableCanvas("p1Canvas");
             	GameVariables.playerMoveable = false;
             }
+            else if (obj.gameObject.name == "Door2" && !GameVariables.p2complete && !GameVariables.p2DoorOpen) {
+                enableCanvas("p2Canvas");
+                GameVariables.playerMoveable = false;
+            }
+            else if (obj.gameObject.name == "Door3" && !GameVariables.p3complete) {
+                enableCanvas("p3Canvas");
+                GameVariables.playerMoveable = false;
+            }
         }
         else if (obj.gameObject.name == "laptop01")
         {
             enableCanvas("p1Canvas2");
             GameVariables.playerMoveable = false;
         }
+        else if (obj.gameObject.name == "GreenCarpet")
+        {
+            if (GameVariables.p2option == 4)
+                GameVariables.p2DoorOpen = true;
+        }
+        else if (obj.gameObject.name == "p2Complete")
+        {
+		          GameVariables.currentPuzzle++;
+            GameVariables.p2complete = true;
+            GameObject.Find("HelpPanelText").GetComponent<UnityEngine.UI.Text>().text = "To complete this puzzle you"
+            + " will need to use 2 conditions with an AND or an OR.\n\nAND will only equate to TRUE when both of the "
+            + "conditions used with it are TRUE.\nOR will only equate to FALSE when both of the conditions used with "
+            + "it are FALSE.";
+            Destroy(obj);
+        }
 
+    }
+
+    void OnTriggerExit(Collider obj)
+    {
+        if (obj.gameObject.name == "GreenCarpet")
+        {
+            if (GameVariables.p2option == 4)
+                GameVariables.p2DoorOpen = false;
+        }
     }
 
     void enableCanvas(string cName)

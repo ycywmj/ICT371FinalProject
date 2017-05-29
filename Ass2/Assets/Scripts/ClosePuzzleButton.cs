@@ -36,12 +36,13 @@ public class ClosePuzzleButton : MonoBehaviour {
 			btn.interactable = false;
 
 		GameVariables.homeworkComplete = true;
+		if (GameVariables.p2option == 1)
+			GameVariables.p2DoorOpen = true;
+
 	}
 
 	public void p1Option(int opt)
 	{
-
-
 		GameVariables.p1attempts++;
 		switch(opt)
 		{
@@ -56,6 +57,53 @@ public class ClosePuzzleButton : MonoBehaviour {
 				break;
 			case 4:
 				p1Four();
+				break;
+		}
+	}
+
+	public void p2Option(int opt)
+	{
+		GameVariables.p2attempts++;
+		switch(opt)
+		{
+			case 1:
+				GameVariables.p2option = 1;
+				if (GameVariables.homeworkComplete)
+					GameVariables.p2DoorOpen = true;
+				closeUICanvas();
+				break;
+			case 2:
+				GameVariables.p2DoorOpen = true;
+				closeUICanvas();
+				GameVariables.p2option = 2;
+				break;
+			case 3:
+				GameVariables.p2option = 3;
+				closeUICanvas();
+				break;
+			case 4:
+				GameVariables.p2option = 4;
+				closeUICanvas();
+				break;
+		}
+	}
+
+	public void p3Option(int opt)
+	{
+		GameVariables.p3attempts++;
+		switch(opt)
+		{
+			case 1:
+				p3One();
+				break;
+			case 2:
+				p3Two();
+				break;
+			case 3:
+				p3Three();
+				break;
+			case 4:
+				p3Four();
 				break;
 		}
 	}
@@ -109,10 +157,45 @@ public class ClosePuzzleButton : MonoBehaviour {
 			door.GetComponent<Transform>().position = new Vector3(1.3135f, 0.829f, 4.3695f);
  			door.GetComponent<Transform>().rotation = Quaternion.Euler(-90,0,90);
 		}
+		GameObject.Find("HelpPanelText").GetComponent<UnityEngine.UI.Text>().text = "This puzzle includes a WHILE DO loop,"
+				+ " when the condition (between WHILE and DO) is true the code will be executed"
+		 		+ "; it will then loop, executing the code again if the condition is true.\n\n"
+				+ "There are multiple ways to open the doors.";
 	}
 
-	void Help()
+	void p3One()
 	{
-		//EditoyUnity.DisplayDialog("Help", "If statment is good", "Continue");
+		print("o1");
+		if (GameVariables.keys.Contains("Green") && GameVariables.keys.Contains("Blue"))
+			completeP3();
+		else
+			closeUICanvas();
 	}
+	void p3Two()
+	{
+		if (GameVariables.keys.Contains("Pink") && GameVariables.homeworkComplete)
+			completeP3();
+		else
+			closeUICanvas();
+	}
+	void p3Three()
+	{
+		if (GameVariables.keys.Contains("Blue") || GameVariables.homeworkComplete)
+			completeP3();
+		else
+			closeUICanvas();
+	}
+	void p3Four()
+	{
+			completeP3();
+	}
+
+	void completeP3()
+	{
+		print("p3 done");
+		closeUICanvas();
+		GameVariables.p3complete = true;
+		GameVariables.currentPuzzle++;
+	}
+
 }

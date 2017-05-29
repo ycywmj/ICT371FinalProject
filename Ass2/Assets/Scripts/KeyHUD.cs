@@ -8,9 +8,4 @@ public class KeyHUD : MonoBehaviour {
 	void Start () {
 		GetComponent<UnityEngine.UI.RawImage>().enabled = false;
 	}
-
-	// Update is called once per frame
-	void Update () {
-
-	}
 }
