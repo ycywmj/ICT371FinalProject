@@ -9,16 +9,35 @@ public class PlayerMovement : MonoBehaviour {
     Rigidbody playerRigidbody;
     int floorMask;
     bool Picking = false;
+    public AudioClip Step;
+    public AudioClip Grab;
+    AudioSource audio;
+    public float time = 0.2f;
+    public bool PlayWalkingAudio = false;
+    public bool PlayGrabAudio = false;
 
     void Awake()
     {
         floorMask = LayerMask.GetMask("Floor");
         anim = GetComponent<Animator>();
         playerRigidbody = GetComponent<Rigidbody>();
+        audio = GetComponent<AudioSource>();
     }
 
     void FixedUpdate()
     {
+        if (time > 0)
+        {
+            time -= Time.deltaTime;
+        }
+        else
+        {
+            PlayWalkingAudio = true;
+            PlayGrabAudio = true;
+            time = 0.2f + Time.deltaTime;
+        }
+
+
         if (GameVariables.playerMoveable)
         {
             float cam_rot = Input.GetAxisRaw("Camera Rotation");
@@ -36,7 +55,11 @@ public class PlayerMovement : MonoBehaviour {
             if (Input.GetKey("f"))
             {
                 Picking = true;
-
+                if (PlayGrabAudio)
+                {
+                    audio.PlayOneShot(Grab, 0.7F);
+                }
+                PlayGrabAudio = false;
             }
             APick(Picking);
             Picking = false;
@@ -60,22 +83,22 @@ public class PlayerMovement : MonoBehaviour {
         // Tell the animator whether or not the player is walking.
         anim.SetBool("IsWalking", walking);
         anim.speed = 3;
+
+        if (walking)
+        {
+
+            if (PlayWalkingAudio)
+            {
+                audio.PlayOneShot(Step, 0.7F);
+            }
+            PlayWalkingAudio = false;
+        }
     }
 
     void OnTriggerEnter(Collider obj)
     {
-        if (obj.gameObject.tag == "Key")
-        {
-            GameVariables.keys.Add(obj.gameObject.name.Substring(3));
-            Destroy(obj.gameObject);
 
-            UnityEngine.UI.RawImage k = GameObject.Find(obj.gameObject.name + "HUD").GetComponent<UnityEngine.UI.RawImage>();
-            if (k != null)
-            {
-                k.enabled = true;
-            }
-        }
-        else if (obj.gameObject.tag == "Door")
+        if (obj.gameObject.tag == "Door")
         {
             if (obj.gameObject.name == "Door1" && !GameVariables.p1complete)
             {
@@ -112,6 +135,24 @@ public class PlayerMovement : MonoBehaviour {
             Destroy(obj);
         }
 
+    }
+
+    void OnTriggerStay(Collider obj)
+    {
+        if(anim.GetBool("Pick"))
+        {
+            if (obj.gameObject.tag == "Key")
+            {
+                GameVariables.keys.Add(obj.gameObject.name.Substring(3));
+                Destroy(obj.gameObject);
+
+                UnityEngine.UI.RawImage k = GameObject.Find(obj.gameObject.name + "HUD").GetComponent<UnityEngine.UI.RawImage>();
+                if (k != null)
+                {
+                    k.enabled = true;
+                }
+            }
+        }
     }
 
     void OnTriggerExit(Collider obj)
